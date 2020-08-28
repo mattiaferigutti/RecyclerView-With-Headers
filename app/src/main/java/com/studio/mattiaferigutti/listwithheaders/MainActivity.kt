@@ -2,6 +2,7 @@ package com.studio.mattiaferigutti.listwithheaders
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Toast
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_main.*
@@ -33,7 +34,16 @@ class MainActivity : AppCompatActivity() {
 
         recycler.layoutManager = GridLayoutManager(this, 2)
 
-        val adapter = HeaderRecyclerViewAdapter(list, recycler)
+        val adapter = HeaderRecyclerViewAdapter(list, recycler,
+            { position, headerTitle ->
+                //header click
+                Toast.makeText(this, headerTitle, Toast.LENGTH_SHORT).show()
+            },
+            { position, itemTitle ->
+                //item click
+                Toast.makeText(this, itemTitle, Toast.LENGTH_SHORT).show()
+            }
+        )
 
         recycler.adapter = adapter
 

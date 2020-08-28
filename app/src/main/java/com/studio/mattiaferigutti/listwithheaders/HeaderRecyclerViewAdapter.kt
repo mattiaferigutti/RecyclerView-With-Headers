@@ -4,10 +4,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
-class HeaderRecyclerViewAdapter(list: List<Any>, recyclerView: RecyclerView) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class HeaderRecyclerViewAdapter(
+    list: List<Any>,
+    recyclerView: RecyclerView,
+    val onHeaderClick: (Int, String) -> Unit,
+    val onItemClick: (Int, String) -> Unit
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private var gameList = mutableListOf<Any>()
     private val listOfHeader = mutableListOf<Section>()
@@ -70,10 +76,12 @@ class HeaderRecyclerViewAdapter(list: List<Any>, recyclerView: RecyclerView) : R
 
     class HeaderViewHolder(item: View) : RecyclerView.ViewHolder(item) {
         val txtHeader: TextView = item.findViewById<TextView>(R.id.txtHeader)
+        val headerContainer: CardView = item.findViewById<CardView>(R.id.headerContainer)
     }
 
     class ItemsViewHolder(item: View) : RecyclerView.ViewHolder(item) {
         val txtName: TextView = item.findViewById<TextView>(R.id.txtName)
+        val itemContainer: CardView = item.findViewById<CardView>(R.id.itemContainer)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -89,8 +97,10 @@ class HeaderRecyclerViewAdapter(list: List<Any>, recyclerView: RecyclerView) : R
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if (holder is HeaderViewHolder) {
             holder.txtHeader.text = (gameList[position] as Section).value
+            holder.headerContainer.setOnClickListener { onHeaderClick.invoke(position, (gameList[position] as Section).value) }
         } else if (holder is ItemsViewHolder) {
             holder.txtName.text = (gameList[position] as Game).title
+            holder.itemContainer.setOnClickListener { onItemClick.invoke(position, (gameList[position] as Game).title) }
         }
     }
 
