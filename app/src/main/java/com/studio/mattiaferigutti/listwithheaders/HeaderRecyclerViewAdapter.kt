@@ -18,8 +18,11 @@ class HeaderRecyclerViewAdapter(list: List<Any>, recyclerView: RecyclerView) : R
     init {
         gameList = list.toMutableList()
 
+        loadData()
+
         this.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
             override fun onChanged() {
+                loadData()
                 updateData()
             }
         })
@@ -29,6 +32,16 @@ class HeaderRecyclerViewAdapter(list: List<Any>, recyclerView: RecyclerView) : R
             override fun getSpanSize(position: Int): Int {
                 //set the number of columns
                 return if (isHeaderPosition(position)) layoutManager?.spanCount!! else 1
+            }
+        }
+    }
+
+    private fun loadData() {
+        gameList.forEach {
+            if (it is Section) {
+                listOfHeader.add(it as Section)
+            } else {
+                listOfItems.add(it as Game)
             }
         }
     }
@@ -52,6 +65,7 @@ class HeaderRecyclerViewAdapter(list: List<Any>, recyclerView: RecyclerView) : R
             }
             numberOfItems[section] = currentList.size
         }
+        listOfHeader.clear()
     }
 
     class HeaderViewHolder(item: View) : RecyclerView.ViewHolder(item) {
@@ -122,6 +136,7 @@ class HeaderRecyclerViewAdapter(list: List<Any>, recyclerView: RecyclerView) : R
      * There is no need to specify where to add the element
      * @param [Game]
      */
+    @Synchronized
     fun add(game: Game) {
         notifyDataSetChanged()
         var gameToAdd: Pair<Int, Game>? = null
@@ -134,8 +149,10 @@ class HeaderRecyclerViewAdapter(list: List<Any>, recyclerView: RecyclerView) : R
                 }
             }
         }
-        gameList.add(gameToAdd?.first ?: 0, gameToAdd?.second as Game)
-        notifyItemInserted(gameToAdd?.first ?: 0)
+        gameToAdd?.let {
+            gameList.add(it.first, it.second)
+            notifyItemInserted(it.first)
+        }
     }
 
     /**
