@@ -175,6 +175,16 @@ class HeaderRecyclerViewAdapter(
         notifyDataSetChanged()
     }
 
+    /**
+     * To add a list of elements
+     * @param list of [Game]
+     */
+    fun addAll(list: List<Game>) {
+        list.forEach {
+            add(it)
+        }
+    }
+
     override fun getItemCount(): Int {
         return gameList.size
     }
