@@ -169,6 +169,7 @@ class HeaderRecyclerViewAdapter(
      * Remove the element from the list
      * @param [Game]
      */
+    @Synchronized
     fun remove(game: Game) {
         gameList.remove(game)
         notifyDataSetChanged()
