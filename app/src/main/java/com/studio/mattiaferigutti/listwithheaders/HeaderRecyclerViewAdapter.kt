@@ -13,12 +13,10 @@ class HeaderRecyclerViewAdapter(list: List<Any>, recyclerView: RecyclerView) : R
     private val listOfHeader = mutableListOf<Section>()
     private val listOfItems = mutableListOf<Game>()
     private val numberOfItems = mutableMapOf<Section, Int>()
-    private val mapOfGame = mutableMapOf<Section, Game>()
+    private val listOfGame = mutableListOf<Pair<Section, Game>>()
 
     init {
         gameList = list.toMutableList()
-
-        updateData()
 
         this.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
             override fun onChanged() {
@@ -37,19 +35,20 @@ class HeaderRecyclerViewAdapter(list: List<Any>, recyclerView: RecyclerView) : R
 
     private fun updateData() {
         var previousSection: Section? = null
+        listOfGame.clear()
+        numberOfItems.clear()
         for (game in gameList) {
             if (game is Section) {
                 previousSection = game
             } else {
                 previousSection?.let {
-                    mapOfGame[it] = game as Game
+                    listOfGame.add(Pair(it, game as Game))
                 }
             }
         }
-
         for (section in  listOfHeader) {
-            val currentList = mapOfGame.filter {
-                it.key == section
+            val currentList = listOfGame.filter {
+                it.first == section
             }
             numberOfItems[section] = currentList.size
         }
@@ -95,22 +94,47 @@ class HeaderRecyclerViewAdapter(list: List<Any>, recyclerView: RecyclerView) : R
         return gameList[position] is Section
     }
 
+    /**
+     * to update the list
+     */
     fun updateData(list: List<Game>) {
         gameList = list.toMutableList()
         notifyDataSetChanged()
     }
-    
+
+    /**
+     *  @return the number of headers
+     *  @return -1 if [section] does not exist
+     */
+    fun getNumberOfHeaders(section: Section) : Int {
+        return numberOfItems[section] ?: -1
+    }
+
+    /**
+     * @return the number of headers existing in the list
+     */
+    fun getHeadersSize() : Int {
+        return listOfHeader.size
+    }
+
+    /**
+     * Add an element to the list
+     * There is no need
+     */
     fun add(game: Game) {
+        notifyDataSetChanged()
         var gameToAdd: Pair<Int, Game>? = null
         for ((index, currentGame) in gameList.withIndex()) {
             if (currentGame is Section) {
                 if (currentGame == game.section) {
-                    gameToAdd = Pair(index + numberOfItems[currentGame]!!, game)
+                    numberOfItems[currentGame]?.let {
+                        gameToAdd = Pair(index + it +1, game)
+                    }
                 }
             }
         }
         gameList.add(gameToAdd?.first ?: 0, gameToAdd?.second as Game)
-        notifyItemInserted(gameToAdd.first)
+        notifyItemInserted(gameToAdd?.first ?: 0)
     }
 
     override fun getItemCount(): Int {
