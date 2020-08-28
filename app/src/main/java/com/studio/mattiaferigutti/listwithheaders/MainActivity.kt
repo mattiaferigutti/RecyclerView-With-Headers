@@ -16,8 +16,11 @@ class MainActivity : AppCompatActivity() {
             Section.FOREPLAY,
             Game("50 Words"),
             Game("Foreplay 2"),
+            Game("Foreplay 3"),
+            Game("Foreplay 4"),
+            Game("Foreplay 5"),
 
-             //hardcore
+            //hardcore
             Section.HARDCORE,
             Game("Hard core 1"),
             Game("Hard core 2"),
