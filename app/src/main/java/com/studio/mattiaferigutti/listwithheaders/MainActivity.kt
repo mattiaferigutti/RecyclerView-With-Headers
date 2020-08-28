@@ -38,9 +38,9 @@ class MainActivity : AppCompatActivity() {
         recycler.adapter = adapter
 
         addButton.setOnClickListener {
+            adapter.add(Game("Foreplay 3", Section.FOREPLAY))
+            adapter.add(Game("Foreplay 3", Section.HARDCORE))
             adapter.add(Game("Foreplay 3", Section.INSTRUCTIONS))
-//            adapter.add(Game("Foreplay 3", Section.HARDCORE))
-//            adapter.add(Game("Foreplay 3", Section.INSTRUCTIONS))
         }
 
     }
