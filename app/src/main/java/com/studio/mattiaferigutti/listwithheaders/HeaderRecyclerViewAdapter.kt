@@ -119,7 +119,8 @@ class HeaderRecyclerViewAdapter(list: List<Any>, recyclerView: RecyclerView) : R
 
     /**
      * Add an element to the list
-     * There is no need
+     * There is no need to specify where to add the element
+     * @param [Game]
      */
     fun add(game: Game) {
         notifyDataSetChanged()
@@ -135,6 +136,15 @@ class HeaderRecyclerViewAdapter(list: List<Any>, recyclerView: RecyclerView) : R
         }
         gameList.add(gameToAdd?.first ?: 0, gameToAdd?.second as Game)
         notifyItemInserted(gameToAdd?.first ?: 0)
+    }
+
+    /**
+     * Remove the element from the list
+     * @param [Game]
+     */
+    fun remove(game: Game) {
+        gameList.remove(game)
+        notifyDataSetChanged()
     }
 
     override fun getItemCount(): Int {
